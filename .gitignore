@@ -1,0 +1,15 @@
+/target/
+/tools/testnet-signer/target/
+*.log
+abci-rpc-probe-*/
+abci-continuity-*/
+prod-replica/
+# never commit validator or node keys
+priv_validator_key.json
+node_key.json
+priv_validator_state*.json
+identity.json
+anet-app-state.json
+pids.json
+*.hex
+.env

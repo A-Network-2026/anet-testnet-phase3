@@ -1,0 +1,18 @@
+{
+  "chain_id": "anet-p2p-testnet-2026-10-23",
+  "genesis_time": "2026-10-22T00:00:00Z",
+  "accounts": [
+    {
+      "address": "ANETBD6D976AF908505D3D52946C3DAD12B5AEC6",
+      "ants_balance": 100000000,
+      "sessions": 1000,
+      "total_activated_ants": 100000000
+    },
+    {
+      "address": "ANET1EFF93BB0219FA9DA5CE427481ED57C42EA1",
+      "ants_balance": 100000000,
+      "sessions": 1000,
+      "total_activated_ants": 100000000
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+CometBFT pin for the Phase 3 testnet
+====================================
+tag:     v0.40.0
+commit:  0880b4d378f347ab16e54ec677ff50d803f37d62   (authoritative)
+source:  https://github.com/cometbft/cometbft/releases/tag/v0.40.0
+
+Coordinator reference builds (Go 1.27.3, CGO_ENABLED=0). Go builds are not
+bit-reproducible across hosts; verify the COMMIT you build from, not these hashes.
+sha256  748d8c37abf7992f2a37e68b07cefb3ab2d44adb5e17b8b992444e51430522b8  cometbft-0.40.0 (darwin/arm64)
+sha256  d94ed4ffdd8bd6b6ede78a0767f67b9044c0a90a973d135c9856d2020fa9dcc2  cometbft-0.40.0-windows-amd64.exe

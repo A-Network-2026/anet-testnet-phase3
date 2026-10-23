@@ -1,0 +1,9 @@
+{
+  "testnet_chain_id": "anet-testnet-phase3-1",
+  "source_chain_id": "anet-private-mainnet-1",
+  "source_peer": "https://explorer.a-network.net",
+  "session_oracle_address": "ANET45DC9F60B95BC73AA2213998983EADA04E39",
+  "session_oracle_note": "Held by the testnet coordinator. Signed session-root updates are verified for authenticity, freshness, monotonicity and replay only; this is the disclosed Phase 2 trust edge.",
+  "quorum": "3-of-4 (CometBFT, equal voting power)",
+  "status": "closed invite-only testnet; no real value; no production change; decentralization not claimed"
+}
