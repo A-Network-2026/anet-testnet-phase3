@@ -24,7 +24,22 @@ commitment roots — then replays it to derive the starting state. Every validat
 same app hash from that replay or the network will not form. The testnet chain then extends from the
 production tip hash under a **different chain id**. Production is never written to.
 
-## Honest scope (read before joining)
+## Why this matters
+
+Today the A-Network L1 is produced by a single operator-run node. If that server is down, nobody can
+send ANET until it is back. The whitepaper's answer is a validator set where **no single machine is
+required**: blocks are finalized when 3 of 4 independent validators agree, so one validator (or the
+original server) can disappear and transfers of existing on-chain balances keep finalizing. A validator
+that goes offline later rejoins and catches up to the same history. This repository tests exactly that
+property — with real production history as the starting state — before anything is proposed for mainnet.
+
+What this testnet **does** show: existing on-chain balances transferring and finalizing with 3/4
+validators up and no commits with 2/4; recovery after a validator restart; identical state on every node.
+
+What it **does not** yet cover: registration, login/OTP, mining-session creation and *new* 1,000-session
+eligibility still depend on the Web2 backend (today via a signed oracle snapshot). The mobile wallet still
+talks to the production node. "Server down, coins still move" applies to coins already on-chain, and only
+once this design is adopted on mainnet after external verification — not to the current production chain.
 
 - **Lab-verified only, so far.** Everything here passed on one machine (4 local validators, 102 Rust
   tests, quorum/recovery/restart matrix, replica-import continuity). It has not yet run across
