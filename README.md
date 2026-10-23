@@ -61,7 +61,7 @@ once this design is adopted on mainnet after external verification — not to th
 
 ## Requirements
 
-- Linux x86_64 or macOS (Windows 11 works; see notes). 2 vCPU / 2 GB RAM is plenty.
+- Linux x86_64, macOS, or Windows 10 21H2+/Windows 11 (Windows bootstrap below). 2 vCPU / 2 GB RAM is plenty.
 - Rust **1.88.0** via [rustup](https://rustup.rs) (pinned by `rust-toolchain.toml`; Windows: MSVC Build
   Tools "Desktop development with C++").
 - Python 3.9+.
@@ -138,11 +138,25 @@ python3 scripts/abci-production-replica-continuity.py --port-base 31558     # re
 Both start four local validators, assert the results, and stop everything. The design record,
 required gates and all evidence so far are in `TESTNET_CONSENSUS_DECISION.md`.
 
-## Windows 11 notes
+## Windows 10/11 bootstrap
 
-Use the Windows CometBFT build (checksum in `COMETBFT_PIN.txt`) or build with Go. Paths in the commands
-above become `C:\...`. Allow inbound TCP 26656 in Windows Defender Firewall. The operator tool's `stop`
-sends SIGTERM/SIGKILL semantics that map to `TerminateProcess` on Windows.
+On each authorized PC, open PowerShell **as Administrator** in a clone of this repository and run:
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass -Force
+.\scripts\install-windows.ps1
+```
+
+The script installs Git, Python, Rust, Go and the MSVC C++ workload, builds the pinned CometBFT
+v0.40.0 source and the ANET node/signer. It **does not** create a validator identity, open firewall
+ports, or start a process. It requires `winget` (Microsoft App Installer), may download 2–4 GB for
+Visual Studio Build Tools, and needs internet access. For a six-PC shop, run it on one PC first to
+confirm install/network prerequisites before repeating it.
+
+This bootstrap has not yet been run on a physical Windows machine. Treat it as a convenience script,
+not audited software; inspect it before running. After it succeeds, follow the operator steps below.
+Use `C:\...` paths in PowerShell. Allow inbound TCP 26656 in Windows Defender Firewall only after the
+operator and coordinator agree the validator's advertised address.
 
 ## License
 
