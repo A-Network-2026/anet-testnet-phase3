@@ -176,6 +176,23 @@ def cmd_start(args):
             app.terminate()
 
 
+def process_alive(pid):
+    # os.kill(pid, 0) terminates on Windows; use Popen handles there instead.
+    if os.name == "nt":
+        import ctypes
+
+        handle = ctypes.windll.kernel32.OpenProcess(0x1000, False, pid)
+        if not handle:
+            return False
+        ctypes.windll.kernel32.CloseHandle(handle)
+        return True
+    try:
+        os.kill(pid, 0)
+        return True
+    except ProcessLookupError:
+        return False
+
+
 def cmd_stop(args):
     pids = json.loads((args.home / "pids.json").read_text())
     # Stop Comet before the app; Comet may hang on a dead ABCI socket, so escalate.
@@ -186,13 +203,9 @@ def cmd_stop(args):
         except ProcessLookupError:
             continue
         deadline = time.monotonic() + 10
-        while time.monotonic() < deadline:
-            try:
-                os.kill(pid, 0)
-            except ProcessLookupError:
-                break
+        while time.monotonic() < deadline and process_alive(pid):
             time.sleep(0.2)
-        else:
+        if process_alive(pid):
             try:
                 os.kill(pid, 9)
             except ProcessLookupError:

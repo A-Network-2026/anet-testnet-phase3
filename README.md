@@ -37,7 +37,10 @@ production tip hash under a **different chain id**. Production is never written 
   imported and hash-committed, but swaps, wrap/unwrap, bridge and token operations are **not executable**
   on the test app yet.
 - **No bonding, no slashing.** Validator membership is the static genesis set.
-- **Single-author code, ~3,000 new lines, no external audit.** Review is welcome and expected.
+- **AI-assisted, single-author code, ~3,000 new lines, no independent human review yet.** The ABCI
+  app, import path, harnesses and operator tool were written with an AI coding assistant under the
+  maintainer's direction and verified only by the automated tests and local runs described here.
+  Independent human review is one of the explicit goals of this testnet; please read before you run.
 - **No tokens of value.** Nothing earned, minted or transferred here has any value or any effect on
   production balances.
 

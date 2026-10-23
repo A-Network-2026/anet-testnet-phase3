@@ -32,20 +32,26 @@ fn oracle_secret() -> SecretKey {
     // fallback is a public constant that is fine for a single-machine lab but
     // must never be used for a shared testnet.
     match std::env::var("ANET_ORACLE_SECRET_HEX") {
-        Ok(hex_secret) => SecretKey::from_slice(&hex::decode(hex_secret.trim()).expect("oracle secret hex"))
-            .expect("oracle secret key"),
+        Ok(hex_secret) => {
+            SecretKey::from_slice(&hex::decode(hex_secret.trim()).expect("oracle secret hex"))
+                .expect("oracle secret key")
+        }
         Err(_) => SecretKey::from_slice(&[3u8; 32]).expect("public lab oracle key"),
     }
 }
 
 fn print_signed_session_snapshot(chain_id: &str, entries_json: &str) {
-    let mut entries = serde_json::from_str::<Vec<serde_json::Value>>(entries_json)
-        .expect("test session entries");
+    let mut entries =
+        serde_json::from_str::<Vec<serde_json::Value>>(entries_json).expect("test session entries");
     let mut normalized = entries
         .iter()
         .map(|entry| {
             (
-                entry["wallet"].as_str().expect("wallet").trim().to_uppercase(),
+                entry["wallet"]
+                    .as_str()
+                    .expect("wallet")
+                    .trim()
+                    .to_uppercase(),
                 entry["sessions"].as_u64().expect("sessions"),
             )
         })
@@ -88,8 +94,8 @@ fn main() {
     let sender_secret = SecretKey::from_slice(&[1u8; 32]).expect("test sender key");
     let recipient_secret = SecretKey::from_slice(&[2u8; 32]).expect("test recipient key");
     let sender = address_from_secret(&sender_secret);
-    let recipient = std::env::var("ANET_TX_TO")
-        .unwrap_or_else(|_| address_from_secret(&recipient_secret));
+    let recipient =
+        std::env::var("ANET_TX_TO").unwrap_or_else(|_| address_from_secret(&recipient_secret));
     let chain_id = std::env::var("ANET_TX_CHAIN_ID").unwrap_or_else(|_| CHAIN_ID.to_owned());
     if std::env::var_os("ANET_PRINT_ORACLE_ADDRESS").is_some() {
         println!("{}", address_from_secret(&oracle_secret()));
@@ -150,7 +156,6 @@ fn main() {
     });
     println!(
         "{}",
-        serde_json::to_string_pretty(&output["transaction"])
-            .expect("serialize test transaction")
+        serde_json::to_string_pretty(&output["transaction"]).expect("serialize test transaction")
     );
 }

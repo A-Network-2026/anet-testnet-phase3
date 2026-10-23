@@ -405,7 +405,10 @@ fn ordered_ids(commands: &[TestnetCommand]) -> Vec<String> {
 fn canonicalize_commands(
     mut commands: Vec<TestnetCommand>,
 ) -> std::result::Result<Vec<TestnetCommand>, String> {
-    if commands.iter().all(|command| matches!(command, TestnetCommand::Transfer(_))) {
+    if commands
+        .iter()
+        .all(|command| matches!(command, TestnetCommand::Transfer(_)))
+    {
         let mut transactions = commands
             .drain(..)
             .filter_map(|command| match command {
@@ -419,9 +422,7 @@ fn canonicalize_commands(
             .map(TestnetCommand::Transfer)
             .collect());
     }
-    if commands.len() == 1
-        && matches!(commands.first(), Some(TestnetCommand::SessionSnapshot(_)))
-    {
+    if commands.len() == 1 && matches!(commands.first(), Some(TestnetCommand::SessionSnapshot(_))) {
         return Ok(commands);
     }
     Err("a proposal must contain either transfers or one session snapshot".to_owned())
@@ -479,19 +480,17 @@ fn build_next_block(
     let mut events = Vec::new();
     let transactions = match commands.as_slice() {
         [TestnetCommand::SessionSnapshot(snapshot)] => {
-            let verified = verify_session_snapshot(
-                snapshot,
-                oracle_address,
-                &state_snapshot.chain_id,
-                0,
-            )
-            .map_err(|error| error.to_string())?;
+            let verified =
+                verify_session_snapshot(snapshot, oracle_address, &state_snapshot.chain_id, 0)
+                    .map_err(|error| error.to_string())?;
             let block_time_ms = time.timestamp_millis();
             if snapshot.as_of_ms <= state_snapshot.session_snapshot_as_of_ms {
                 return Err("session snapshot timestamp was already applied".to_owned());
             }
             if snapshot.as_of_ms > block_time_ms {
-                return Err("session snapshot timestamp is after the consensus block time".to_owned());
+                return Err(
+                    "session snapshot timestamp is after the consensus block time".to_owned(),
+                );
             }
             if block_time_ms.saturating_sub(snapshot.as_of_ms) > 600_000 {
                 return Err("session snapshot is stale at the consensus block time".to_owned());
@@ -549,9 +548,9 @@ fn build_next_block(
                 .iter()
                 .map(|command| match command {
                     TestnetCommand::Transfer(transaction) => Ok(transaction.clone()),
-                    TestnetCommand::SessionSnapshot(_) => Err(
-                        "session snapshots cannot be mixed with transfers".to_owned(),
-                    ),
+                    TestnetCommand::SessionSnapshot(_) => {
+                        Err("session snapshots cannot be mixed with transfers".to_owned())
+                    }
                 })
                 .collect::<std::result::Result<Vec<_>, String>>()?;
             for transaction in &transactions {
@@ -958,7 +957,7 @@ impl Application for TestnetAbciApp {
                 let sorted = canonicalize_commands(commands)?;
                 if ordered_ids(&sorted) != original_ids {
                     return Err(
-                        "committed proposal is not in canonical ANET command order".to_owned(),
+                        "committed proposal is not in canonical ANET command order".to_owned()
                     );
                 }
                 build_next_block(
